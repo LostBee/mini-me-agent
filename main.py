@@ -11,6 +11,13 @@ from langchain_core.messages import HumanMessage, AIMessage
 # --- Import the tools from their new files ---
 from tools.rice_scorer import score_rice_tool
 from tools.backlog_manager import add_item_to_backlog_tool, view_backlog_tool
+from tools.meeting_manager import (
+    add_meeting_note_tool,
+    view_meeting_notes_tool,
+    list_meetings_tool,
+    delete_note_by_id_tool,
+    delete_meeting_tool
+)
 
 # --- Database Setup Function ---
 def setup_database():
@@ -29,6 +36,24 @@ def setup_database():
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+     # --- New Tables for Meetings ---
+    # Stores the unique meeting names
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS meetings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+        )
+    ''')
+    # Stores the notes, linked to a meeting by meeting_id
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            meeting_id INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE
+        )
+    ''')
     conn.commit()
     conn.close()
 
@@ -40,7 +65,16 @@ def main():
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
     # The tools list now uses the imported functions
-    tools = [score_rice_tool, add_item_to_backlog_tool, view_backlog_tool]
+    tools = [
+    score_rice_tool,
+    add_item_to_backlog_tool,
+    view_backlog_tool,
+    add_meeting_note_tool,
+    view_meeting_notes_tool,
+    list_meetings_tool,
+    delete_note_by_id_tool,
+    delete_meeting_tool
+    ]
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", "You are a helpful product manager assistant. After scoring a feature, ask the user if they want to add it to the backlog."),

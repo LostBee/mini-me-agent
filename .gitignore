@@ -8,3 +8,6 @@ venv/
 
 #Maybe I shouldn't share backlog with everyone
 backlog.db
+
+# Let's hide the bytecode
+__pycache__/
