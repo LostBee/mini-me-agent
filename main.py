@@ -10,7 +10,7 @@ load_dotenv()
 
 # 1. Initialize the LLM
 # This creates an object that connects to the Gemini model.
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
 # 2. Invoke the LLM
 # We send our first prompt to the model.
