@@ -8,6 +8,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.tools import tool
+# --- New Imports for Memory ---
+from langchain_core.messages import HumanMessage, AIMessage
 
 # --- 1. Database Setup Function ---
 def setup_database():
@@ -77,17 +79,17 @@ def view_backlog_tool() -> str:
 
 # --- 3. Agent Setup ---
 def main():
-    # Run the database setup function at the start
     setup_database()
 
     load_dotenv()
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
-    # Add the new tools to the agent's toolbox
     tools = [score_rice_tool, add_item_to_backlog_tool, view_backlog_tool]
 
+    # --- Prompt now includes a placeholder for chat_history ---
     prompt = ChatPromptTemplate.from_messages([
         ("system", "You are a helpful product manager assistant. After scoring a feature, ask the user if they want to add it to the backlog."),
+        ("placeholder", "{chat_history}"),
         ("human", "{input}"),
         ("placeholder", "{agent_scratchpad}"),
     ])
@@ -95,14 +97,25 @@ def main():
     agent = create_tool_calling_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-    # --- Use the agent interactively ---
+    # --- Interactive Loop with Memory Management ---
+    chat_history = [] # Create a list to store messages
+
     print("Mini-Me PM Agent is ready. Type 'exit' to end.")
     while True:
         user_request = input("You: ")
         if user_request.lower() == 'exit':
             break
         
-        result = agent_executor.invoke({"input": user_request})
+        # Pass the history into the agent on every turn
+        result = agent_executor.invoke({
+            "input": user_request,
+            "chat_history": chat_history
+        })
+        
+        # Add the latest turn to the history
+        chat_history.append(HumanMessage(content=user_request))
+        chat_history.append(AIMessage(content=result['output']))
+        
         print(f"Mini-Me: {result['output']}")
 
 if __name__ == "__main__":
