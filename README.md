@@ -1,6 +1,4 @@
 
-## Updated README.md File 📜
-
 # Mini-Me PM Agent 🤖
 
 An AI-powered assistant designed to help Product Managers with their daily tasks, including feature prioritization, backlog management, meeting prep, and task tracking. This project provides both a local command-line interface (CLI) and a cloud-hosted web application for easy access.
