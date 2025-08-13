@@ -40,6 +40,7 @@ An AI-powered assistant designed to help Product Managers with their daily tasks
 ---
 ## 📂 Project Structure
 
+```
 .
 ├── tools/
 │   ├── **init**.py
@@ -56,7 +57,7 @@ An AI-powered assistant designed to help Product Managers with their daily tasks
 ├── requirements.in     \# List of top-level dependencies
 ├── requirements.txt    \# Auto-generated locked dependencies
 └── .env                \# API keys and environment variables
-
+```
 
 ---
 ## 🚀 Setup and Installation
