@@ -17,7 +17,13 @@ from tools.meeting_manager import (
     list_meetings_tool,
     delete_note_by_id_tool,
     delete_meeting_tool
-)
+    )
+from tools.task_manager import (
+    add_task_tool,
+    view_tasks_tool,
+    mark_task_done_tool,
+    find_task_by_description_tool,
+    )
 
 # --- Database Setup Function ---
 def setup_database():
@@ -54,6 +60,15 @@ def setup_database():
             FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE
         )
     ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            description TEXT NOT NULL,
+            due_date TEXT,
+            status TEXT NOT NULL DEFAULT 'active',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
     conn.commit()
     conn.close()
 
@@ -66,18 +81,14 @@ def main():
 
     # The tools list now uses the imported functions
     tools = [
-    score_rice_tool,
-    add_item_to_backlog_tool,
-    view_backlog_tool,
-    add_meeting_note_tool,
-    view_meeting_notes_tool,
-    list_meetings_tool,
-    delete_note_by_id_tool,
-    delete_meeting_tool
+    score_rice_tool, add_item_to_backlog_tool, view_backlog_tool,
+    add_meeting_note_tool, view_meeting_notes_tool, list_meetings_tool,
+    delete_note_by_id_tool, delete_meeting_tool,
+    add_task_tool, view_tasks_tool, mark_task_done_tool, find_task_by_description_tool
     ]
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful product manager assistant. After scoring a feature, ask the user if they want to add it to the backlog."),
+        ("system", "You are a helpful product manager assistant. You help with tools availble in your tools like Rice Scoring, after scoring a feature, ask the user if they want to add it to the backlog. And while working with tasks, To delete a task by description, first use the find_task_by_description_tool to get the ID, then confirm with the user before you offer to mark it as done."),
         ("placeholder", "{chat_history}"),
         ("human", "{input}"),
         ("placeholder", "{agent_scratchpad}"),
