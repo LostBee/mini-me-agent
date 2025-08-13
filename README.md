@@ -1,7 +1,6 @@
 
 ## Updated README.md File 📜
 
-```markdown
 # Mini-Me PM Agent 🤖
 
 An AI-powered assistant designed to help Product Managers with their daily tasks, including feature prioritization, backlog management, meeting prep, and task tracking. This project provides both a local command-line interface (CLI) and a cloud-hosted web application for easy access.
@@ -43,8 +42,6 @@ An AI-powered assistant designed to help Product Managers with their daily tasks
 ---
 ## 📂 Project Structure
 
-```
-
 .
 ├── tools/
 │   ├── **init**.py
@@ -62,7 +59,6 @@ An AI-powered assistant designed to help Product Managers with their daily tasks
 ├── requirements.txt    \# Auto-generated locked dependencies
 └── .env                \# API keys and environment variables
 
-````
 
 ---
 ## 🚀 Setup and Installation
@@ -133,5 +129,5 @@ streamlit run app.py
 
 This command will start a local web server and open the application in your browser. This is the same code that is deployed to Streamlit Community Cloud for online access.
 
-```
-```
+
+
