@@ -12,6 +12,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 # Import your tools
 from tools.rice_scorer import score_rice_tool
 from tools.backlog_manager import add_item_to_backlog_tool, view_backlog_tool
+from tools.utils import get_todays_date_tool
 from tools.meeting_manager import (
     add_meeting_note_tool,
     view_meeting_notes_tool,
@@ -85,7 +86,8 @@ def get_agent_executor():
     add_task_tool, 
     view_tasks_tool, 
     mark_task_done_tool, 
-    find_task_by_description_tool
+    find_task_by_description_tool,
+    get_todays_date_tool
     ]
 
     prompt = ChatPromptTemplate.from_messages([
